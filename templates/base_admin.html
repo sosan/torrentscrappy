@@ -1,0 +1,22 @@
+{% extends "bootstrap/base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for("static", filename="css/reset.css") }}">
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for("static", filename="css/main.css") }}">
+<link rel="icon" href="{{ url_for("static", filename="images/favicon.ico") }}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <br><br>
+        <div align="left">
+            <a href="{{ url_for("admin_profile") }}"><button class="btn btn-success ">HOME</button> </a>
+        </div>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+{% endblock %}
+

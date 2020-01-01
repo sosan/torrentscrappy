@@ -1,0 +1,22 @@
+{% extends "base_admin.html" %}
+
+{% block content %}
+    <div class="container">
+    <h1 class="text-left">MENU ADMIN</h1>
+        <BR><BR>
+        <div class="text-left">
+            <div class="row"><a href="{{ url_for("alta_peliculas") }}">1. Scrappy DonTorrent Peliculas</a></div>
+            <div class="row"><a href="{{ url_for("alta_series") }}">1. Scrappy DonTorrent Series</a></div>
+            <div class="row"><a href="{{ url_for("ver_productos") }}">3. Ver/Modificar/Borrar</a></div>
+{#            <div class="row"><a href="{{ url_for("ver_config") }}">4. Cambiar visibilidad productos</a></div>#}
+
+        </div>
+
+
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+    {{ super() }}
+{% endblock %}

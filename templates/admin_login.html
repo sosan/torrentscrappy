@@ -1,0 +1,33 @@
+{% extends "base_admin.html" %}
+
+{% block content %}
+<div class="breadcrumb">
+<div class="container">
+        <h1>ADMIN LOGIN:</h1>
+         <p>usuario: h@h.com clave:123</p>
+        <div class="field">
+      <div class="control">
+        <form action="{{ url_for("recibir_login_admin") }}" method="post">
+        <input type="hidden" name="user" value="">
+
+        Usuario: <input type="text" name="usuario" value="" placeholder="Usuario" class="input-sm"><br>
+        Contraseña: <input type="text" name="password" value="" placeholder="Contraseña" class="input-sm"><br><br>
+            <div class="control">
+        <button type="submit" class="btn btn-success">Login</button>
+            </div>
+        </form>
+{#          {% if usuario_no == True %}#}
+{#    <span>Email o password, son incorrectos...Vuélve a intentarlo ó </span><a href="{{ url_for("registro") }}">regístrate.</a>#}
+{#    {% endif %}#}
+      </div>
+        </div>
+
+
+<br><br><br><br><br><br><br><br>
+    <div align="right">
+    <a href="{{ url_for("home") }}"><button class="btn btn-danger btn-lg">PAGINA PRINCIPAL</button> </a>
+    </div>
+
+</div>
+</div>
+{% endblock %}

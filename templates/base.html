@@ -1,0 +1,16 @@
+{% extends "bootstrap/base.html" %}
+
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for("static", filename="css/reset.css") }}">
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for("static", filename="css/main.css") }}">
+<link rel="icon" href="{{ url_for("static", filename="images/favicon.ico") }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Wruczek/Bootstrap-Cookie-Alert@gh-pages/cookiealert.css">
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}
+
+
