@@ -91,10 +91,10 @@ class ManagerWeb:
             titulo = self.gettitulo(links[i])
 
             proceso = subprocess.check_output(["python", "scrappytest.py", titulo], shell=True,
-                                        encoding="utf-8", universal_newlines=True)
+                                              encoding="utf-8", universal_newlines=True)
             imagen = str(proceso).splitlines()[0]
             resultado = managermongo.encontrarTituloImagen(titulo, imagen)
-            if resultado == False:
+            if not resultado:
                 dic = {
                     "titulo": titulo,
                     "link": self.prefix_dontorrent + links[i],
