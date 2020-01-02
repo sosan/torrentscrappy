@@ -89,26 +89,10 @@ class ManagerWeb:
         lista = []
         for i in range(0, len(links)):
             titulo = self.gettitulo(links[i])
-            # 'contenido="{0}"'.format(titulo)
 
-            # p = subprocess.run(["python", "scrappytest.py", '{0}'.format(titulo)], shell=True,
-            #                    stdout=subprocess.PIPE,
-            #         # input='{0}'.format(titulo),
-            #                    encoding='utf-8')
-            # print(p.returncode)
-
-            p = subprocess.check_output(["python", "scrappytest.py", titulo], shell=True,
-                                        encoding="utf-8",
-                                        universal_newlines=True,
-
-                                        # stderr=subprocess.STDOUT
-                                        )
-            # p = subprocess.Popen(["python", "scrappytest.py"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding="utf-8")
-            # res = p.communicate(input=titulo)
-
-            imagen = str(p).splitlines()[0]
-
-            # imagen = subprocess.run("python scrappytest.py", shell=True, capture_output=True)
+            proceso = subprocess.check_output(["python", "scrappytest.py", titulo], shell=True,
+                                        encoding="utf-8", universal_newlines=True)
+            imagen = str(proceso).splitlines()[0]
             resultado = managermongo.encontrarTituloImagen(titulo, imagen)
             if resultado == False:
                 dic = {
