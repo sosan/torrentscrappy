@@ -64,14 +64,21 @@ class ManagerWeb:
         return fecha
 
     def scrappyDonTorrent(self):
+
+        # pagina_current = 1
+        #
+        # while pagina_current < 5:
+        #     pass
+
         peliculas = self.web.get(self.URL_PELICULAS_HD)
+        # peliculas.next
         lista = []
 
         seleccion = "body > div.container > div.row > div.col-lg > div.noticias > " \
                     "div.position-relative > div.card.shadow.noticia > div.card-body > div.noticiasContent"
         #
         # El miércoles día 04 de diciembre
-
+        # una pagina
         fechas = list(peliculas.html.find(seleccion))
 
         for i in range(0, len(fechas)):
