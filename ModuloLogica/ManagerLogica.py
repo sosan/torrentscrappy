@@ -15,13 +15,12 @@ class ManagerLogica:
         return ok
 
     def set_peliculas(self):
-        resultados = self.managerweb.getPeliculas()
+        resultados = self.managerweb.scrappyDonTorrent()
 
         if len(resultados) > 0:
             ok = self.managermongo.insertarurls(resultados)
         else:
             return False
-
 
     def getpeliculas(self):
         resultados = self.managermongo.getpeliculas()

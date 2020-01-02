@@ -1,9 +1,11 @@
+import subprocess
 from json import JSONDecodeError
 
 import pyppeteer
 from flask import Response
 
 from requests_html import HTMLSession
+import scrappytest
 from requests_html import AsyncHTMLSession
 from datetime import datetime
 import json
@@ -12,23 +14,22 @@ import math
 import doctest
 
 
-class HTMLSessionFixed(HTMLSession):
-    """
-    pip3 install websockets==6.0 --force-reinstall
-    """
-
-    def __init__(self, **kwargs):
-        super(HTMLSessionFixed, self).__init__(**kwargs)
-        self.__browser_args = kwargs.get("browser_args", ["--no-sandbox"])
-
-    @property
-    async def browser(self):
-        if not hasattr(self, "_browser"):
-            self._browser = await pyppeteer.launch(ignoreHTTPSErrors=not self.verify, headless=True,
-                                                   handleSIGINT=False, handleSIGTERM=False, handleSIGHUP=False,
-                                                   args=self.__browser_args)
-
-        return self._browser
+#
+# class HTMLSessionFixed(HTMLSession):
+#     """
+#     pip3 install websockets==6.0 --force-reinstall
+#     """
+#     def __init__(self, **kwargs):
+#         super(HTMLSessionFixed, self).__init__(**kwargs)
+#         self.__browser_args = kwargs.get("browser_args", ["--no-sandbox"])
+#
+#     @property
+#     def browser(self):
+#         if not hasattr(self, "_browser"):
+#             self._browser = pyppeteer.launch(ignoreHTTPSErrors=not(self.verify), headless=True, handleSIGINT=False,
+#                                              handleSIGTERM=False, handleSIGHUP=False, args=self.__browser_args)
+#
+#         return self._browser
 
 
 class ManagerWeb:
@@ -47,12 +48,22 @@ class ManagerWeb:
         self.URL_API_AFINITY = "https://api-filmaffinity.herokuapp.com/api/busqueda/"
         self.prefix_dontorrent = "https://dontorrent.org"
         self.web = HTMLSession()
+
         # self.aweb = AsyncHTMLSession()
 
         # self.peliculas = None
         # self.series = None
 
-    def getPeliculas(self):
+    def getfechas(self, fecha):
+        fechasplits = fecha.split(" ")
+
+        dia = int(fechasplits[3])
+        mes = self.dic_meses[fechasplits[5].lower()]
+
+        fecha = datetime(2019, mes, dia)
+        return fecha
+
+    def scrappyDonTorrent(self):
         peliculas = self.web.get(self.URL_PELICULAS_HD)
         lista = []
 
@@ -62,12 +73,6 @@ class ManagerWeb:
         # El miércoles día 04 de diciembre
 
         fechas = list(peliculas.html.find(seleccion))
-        # fechas[i].links
-        # selecciond = "body > div.container > div.row > div.col-lg > div.noticias > " \
-        #              "div.position-relative > div.card.shadow.noticia > div.card-body > div.noticiasContent > " \
-        #              "div.text-center"
-        #
-        # links = list(peliculas.html.find(selecciond))
 
         for i in range(0, len(fechas)):
             fecha = self.getfechas(fechas[i].text)
@@ -80,20 +85,30 @@ class ManagerWeb:
 
         return lista
 
-    def getfechas(self, fecha):
-        fechasplits = fecha.split(" ")
-
-        dia = int(fechasplits[3])
-        mes = self.dic_meses[fechasplits[5].lower()]
-
-        fecha = datetime(2019, mes, dia)
-        return fecha
-
     def getdetail_datos(self, links, fecha):
         lista = []
         for i in range(0, len(links)):
             titulo = self.gettitulo(links[i])
-            imagen = self.getimagenasync(titulo)
+            # 'contenido="{0}"'.format(titulo)
+
+            # p = subprocess.run(["python", "scrappytest.py", '{0}'.format(titulo)], shell=True,
+            #                    stdout=subprocess.PIPE,
+            #         # input='{0}'.format(titulo),
+            #                    encoding='utf-8')
+            # print(p.returncode)
+
+            p = subprocess.check_output(["python", "scrappytest.py", titulo], shell=True,
+                                        encoding="utf-8",
+                                        universal_newlines=True,
+
+                                        # stderr=subprocess.STDOUT
+                                        )
+            # p = subprocess.Popen(["python", "scrappytest.py"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding="utf-8")
+            # res = p.communicate(input=titulo)
+
+            imagen = str(p).splitlines()[0]
+
+            # imagen = subprocess.run("python scrappytest.py", shell=True, capture_output=True)
             resultado = managermongo.encontrarTituloImagen(titulo, imagen)
             if resultado == False:
                 dic = {
@@ -146,8 +161,6 @@ class ManagerWeb:
         print(titulo)
         try:
 
-
-
             datos = json.loads(apiafinity.html.text)
         except JSONDecodeError:
             return None
@@ -167,25 +180,36 @@ class ManagerWeb:
 
     def getimagenasync(self, titulo):  # cambiar por ponerlo directo a la url
 
-        # r = await asession.get('https://python.org/')
-        # session = HTMLSession()
-        # r = session.get(self.URL_AFINITY2 + titulo)
-        # r.html.render()
-
         apiafinity = self.web.get(self.URL_AFINITY2 + titulo)
+        apiafinity.html.render()
         print(titulo)
         try:
             # mc-poster
             datos = apiafinity.html.find(".mc-poster > a > img")
+            if datos:
+                imagen = datos[0].attrs["src"]
+                if imagen is not None:
+                    return imagen
+            else:
+                datos = apiafinity.html.find("#movie-main-image-container")
+                if datos:
+                    imagen = list(datos[0].absolute_links)[0]
+                    if imagen is not None:
+                        return imagen
+                else:
+                    # affinity busca por google con delay de 200ms
+                    datos = apiafinity.html.find("img.gs-image")
+                    if datos:
+                        imagen = datos[0].attrs["src"]
+                        return imagen
+
+            return None
+
         except JSONDecodeError:
             return None
             # raise Exception("Excepcion {0}=>{1}".format(titulo, apiafinity.html.text))
-
-        if len(datos) > 0:
-            imagen = datos[0].attrs["src"]
-            if imagen is not None:
-                return imagen
-        return None
+        except TypeError:
+            return None
 
     def getSeries(self):
         self.series = self.web.get(self.URL_SERIES)

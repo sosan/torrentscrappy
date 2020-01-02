@@ -72,26 +72,24 @@ def admin_profile():
 
 @app.route("/admin_profile/alta_peliculas", methods=["GET"])
 def alta_peliculas():
-
     resultado = managerlogica.set_peliculas()
 
     return render_template("alta_peliculas.html")
+
 
 @app.route("/admin_profile/alta_series", methods=["GET"])
 def alta_series():
-
-    resultado = managerlogica.set_peliculas()
-
-    return render_template("alta_peliculas.html")
+    pass
+    # resultado = managerlogica.set_peliculas()
+    #
+    # return render_template("alta_peliculas.html")
 
 
 @app.route("/admin_profile/ver_productos", methods=["GET"])
 def ver_productos():
-
     resultado = managerlogica.set_peliculas()
 
     return render_template("ver_productos.html")
-
 
 
 ####### web #########
