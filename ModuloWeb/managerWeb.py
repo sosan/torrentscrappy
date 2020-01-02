@@ -5,7 +5,7 @@ import pyppeteer
 from flask import Response
 
 from requests_html import HTMLSession
-import scrappytest
+import scrappyimagen_filmaffinity
 from requests_html import AsyncHTMLSession
 from datetime import datetime
 import json
@@ -89,20 +89,23 @@ class ManagerWeb:
         lista = []
         for i in range(0, len(links)):
             titulo = self.gettitulo(links[i])
-
-            proceso = subprocess.check_output(["python", "scrappytest.py", titulo], shell=True,
+            print(titulo)
+            proceso = subprocess.check_output(["python", "scrappyimagen_filmaffinity.py", titulo], shell=True,
                                               encoding="utf-8", universal_newlines=True)
             imagen = str(proceso).splitlines()[0]
-            resultado = managermongo.encontrarTituloImagen(titulo, imagen)
-            if not resultado:
-                dic = {
-                    "titulo": titulo,
-                    "link": self.prefix_dontorrent + links[i],
-                    "imagen": imagen,
-                    "fecha": fecha
-                }
-                managermongo.insertarurls(dic)
-                lista.append(dic)
+            if imagen == "None":
+                pass
+            else:
+                resultado = managermongo.encontrarTituloImagen(titulo, imagen)
+                if resultado == False:
+                    dic = {
+                        "titulo": titulo,
+                        "link": self.prefix_dontorrent + links[i],
+                        "imagen": imagen,
+                        "fecha": fecha
+                    }
+                    managermongo.insertarurls(dic)
+                    lista.append(dic)
 
         return lista
 
