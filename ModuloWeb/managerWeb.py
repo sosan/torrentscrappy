@@ -89,7 +89,7 @@ class ManagerWeb:
         for i in range(0, len(links)):
             titulo = self.gettitulo(links[i])
             print(titulo)
-            proceso = subprocess.check_output(["python", "scrappy.py", titulo], shell=True,
+            proceso = subprocess.check_output(["python", "scrappyimagen_filmaffinity.py", titulo], shell=True,
                                               encoding="utf-8", universal_newlines=True)
             imagen = str(proceso).splitlines()[0]
             if imagen == "None":
