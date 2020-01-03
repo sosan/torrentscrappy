@@ -1,17 +1,10 @@
 import subprocess
 from json import JSONDecodeError
 
-import pyppeteer
-from flask import Response
-
 from requests_html import HTMLSession
-import scrappyimagen_filmaffinity
-from requests_html import AsyncHTMLSession
 from datetime import datetime
 import json
 from ModuloMongo.mongomanager import managermongo
-import math
-import doctest
 
 
 #
@@ -96,7 +89,7 @@ class ManagerWeb:
         for i in range(0, len(links)):
             titulo = self.gettitulo(links[i])
             print(titulo)
-            proceso = subprocess.check_output(["python", "scrappyimagen_filmaffinity.py", titulo], shell=True,
+            proceso = subprocess.check_output(["python", "scrappy.py", titulo], shell=True,
                                               encoding="utf-8", universal_newlines=True)
             imagen = str(proceso).splitlines()[0]
             if imagen == "None":
@@ -171,7 +164,7 @@ class ManagerWeb:
                     return urlfoto
         return None
 
-    def getimagenasync(self, titulo):  # cambiar por ponerlo directo a la url
+    def getimagen_subprocess(self, titulo):
 
         apiafinity = self.web.get(self.URL_AFINITY2 + titulo)
         apiafinity.html.render()

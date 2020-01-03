@@ -5,6 +5,9 @@
     SCRAPPER TORRENT
 
 """
+import os
+import signal
+import subprocess
 
 from flask import Flask, json
 from flask import request
@@ -84,7 +87,19 @@ def alta_peliculas_get():
 def alta_peliculas_post():
     # l = "<div>hola</div>"
     # return l  # json.jsonify(l)
+    # proceso = subprocess.check_output(["python", "scrappy.py", "Joker"],  # shell=True,
+    #                                   encoding="utf-8", universal_newlines=True)
+    # imagen = str(proceso).splitlines()[0]
+    # pwd = os.path.abspath(os.curdir)
+    for i in range(0, 3):
+        proceso = subprocess.run(["python", "scrappy.py", "Joker"], shell=True, encoding="utf-8",
+                                  universal_newlines=True)
+        return "63345<br>"
+    # proceso = subprocess.check_output(["python", "scrappy.py", "Joker"],  shell=True,
+    #                                   encoding="utf-8", universal_newlines=True, preexec_fn=os.setsid)
+    # imagen = proceso.stdout.read()
 
+    # os.killpg(os.getpgid(proceso.pid), signal.SIGTERM)
 
     if "blockedform" in session:
         if session["blockedform"] == True:

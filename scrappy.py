@@ -20,6 +20,7 @@ def getimagenasync(titulo):  # cambiar por ponerlo directo a la url
             imagen = datos[0].attrs["src"]
             if imagen is not None:
                 print(imagen)
+                print("testing 1")
                 return True
         else:
             datos = apiafinity.html.find("#movie-main-image-container")
@@ -27,6 +28,7 @@ def getimagenasync(titulo):  # cambiar por ponerlo directo a la url
                 imagen = list(datos[0].absolute_links)[0]
                 if imagen is not None:
                     print(imagen)
+                    print("testing 2")
                     return True
             else:
                 # affinity busca por google con delay de 200ms
@@ -34,6 +36,7 @@ def getimagenasync(titulo):  # cambiar por ponerlo directo a la url
                 if datos:
                     imagen = datos[0].attrs["src"]
                     print(imagen)
+                    print("testing 3")
                     return True
         print("None")
         return False
