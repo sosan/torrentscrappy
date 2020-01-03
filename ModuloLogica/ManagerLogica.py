@@ -14,8 +14,8 @@ class ManagerLogica:
         ok = self.managermongo.comprobaradmin(usuario, password)
         return ok
 
-    def set_peliculas(self):
-        resultados = self.managerweb.scrappyDonTorrent()
+    def set_peliculas(self, current_pagina):
+        resultados = self.managerweb.scrappyDonTorrent(current_pagina)
         # terminado escaner las paginas
         if len(resultados) > 0:
             return resultados

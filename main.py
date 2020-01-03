@@ -6,7 +6,7 @@
 
 """
 
-from flask import Flask
+from flask import Flask, json
 from flask import request
 from flask import render_template
 from flask import url_for
@@ -71,10 +71,40 @@ def admin_profile():
 
 
 @app.route("/admin_profile/alta_peliculas", methods=["GET"])
-def alta_peliculas():
-    resultados = managerlogica.set_peliculas()
+def alta_peliculas_get():
+    # resultados = managerlogica.set_peliculas()
+    if "resultados" in session:
+        resultados = session["resultados"]
 
-    return render_template("alta_peliculas.html", resultados=resultados)
+        return render_template("alta_peliculas.html", resultados=resultados)
+    return render_template("alta_peliculas.html")
+
+
+@app.route("/admin_profile/alta_peliculas", methods=["POST"])
+def alta_peliculas_post():
+    # l = "<div>hola</div>"
+    # return l  # json.jsonify(l)
+
+
+    if "blockedform" in session:
+        if session["blockedform"] == True:
+            return redirect(url_for("alta_peliculas_get"))
+
+    if "maxpaginas" in request.form:
+        session["blockedform"] = True
+        try:
+            maxpaginas = int(request.form["maxpaginas"])
+            resultados = []
+            for current_pagina in range(0, maxpaginas):
+                l = managerlogica.set_peliculas(current_pagina)
+                resultados.append(l)
+                return "<div class="">{0}</div>".format(l)
+
+            session["resultados"] = resultados
+        except ValueError:
+            raise Exception("Valor no posible convertir {0}".format(request.form["maxpaginas"]))
+
+    return redirect(url_for("alta_peliculas_get"))
 
 
 @app.route("/admin_profile/alta_series", methods=["GET"])

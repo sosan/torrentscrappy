@@ -1,3 +1,61 @@
 {% extends "base_admin.html" %}
 {% block content %}
+    <div class="container">
+    <h1>Alta de Peliculas</h1>
+    <form action="{{ url_for("alta_peliculas_post") }}" method="post">
+        <label>Numero Paginas Maximo:</label>
+        <select name="maxpaginas">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+    <button type="button" class="btn btn-success" id="boton_enviar" onclick="boton_enviar(this)" >Realizar scaneo</button>
+    </form>
+
+
+    </div>
+
+
+<div class="container" id="contenedor">
+
+
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $(function()
+        {
+
+            $('#boton_enviar').click(function()
+            {
+                $.ajax({
+                    url: '{{ url_for("alta_peliculas_post") }}',
+                    data: $('form').serialize(),
+                    type: 'POST',
+                    success: function(response)
+                    {
+                        console.log(response);
+
+                        $('#boton_enviar').replaceWith("<button type=\"button\" class=\"btn btn-info\" id=\"boton_enviar\" onclick=\"boton_enviar(this)\" disabled >Procesando...</button>");
+                        {#let obj = JSON.parse(response);#}
+                        {#console.log(obj);#}
+                        $('#contenedor').append(response);
+
+                    },
+                    error: function(error)
+                    {
+                        console.log(error);
+                    }, done: function (data) {
+
+                    }
+                });
+            });
+        });
+
+    </script>
+
 {% endblock %}

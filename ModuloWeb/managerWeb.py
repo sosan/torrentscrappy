@@ -63,14 +63,13 @@ class ManagerWeb:
         fecha = datetime(2019, mes, dia)
         return fecha
 
-    def scrappyDonTorrent(self):
-
-        # pagina_current = 1
-        #
-        # while pagina_current < 5:
-        #     pass
+    def scrappyDonTorrent(self, current_pagina):
 
         peliculas = self.web.get(self.URL_PELICULAS_HD)
+
+        for i in range(0, current_pagina):
+            peliculas.next
+
         # peliculas.next
         lista = []
 
