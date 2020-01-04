@@ -9,7 +9,8 @@ import os
 import signal
 import subprocess
 
-from flask import Flask, json
+from flask import Flask
+from flask import json
 from flask import request
 from flask import render_template
 from flask import url_for
@@ -17,13 +18,14 @@ from flask import redirect
 from flask import session
 from flask_bootstrap import Bootstrap
 from ModuloLogica.ManagerLogica import ManagerLogica
+from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
 
 app.secret_key = "secrett"
 bootstrap = Bootstrap(app)
+socketio = SocketIO(app)
 
-# managerweb = ManagerWeb()
 managerlogica = ManagerLogica()
 
 
