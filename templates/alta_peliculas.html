@@ -26,36 +26,68 @@
 
 {% block scripts %}
     {{ super() }}
-    <script>
-        $(function()
-        {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="{{ url_for("static", filename="js/socket.io.min.js") }}"></script>
+    <script type="text/javascript">
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        socket.on( 'connect', function() {
+        socket.emit( 'my event', {
+          data: 'User Connected'
+        } );
+      {#  var form = $( 'form' ).on( 'submit', function( e ) {#}
+      {#    e.preventDefault();#}
+      {#    let user_name = $( 'input.username' ).val();#}
+      {#    let user_input = $( 'input.message' ).val();#}
+      {#    socket.emit( 'my event', {#}
+      {#      user_name : user_name,#}
+      {#      message : user_input#}
+      {#    } );#}
+      {#    $( 'input.message' ).val( '' ).focus();#}
+      {#  } )#}
+      {#} );#}
+      {#socket.on( 'my response', function( msg ) {#}
+      {#  console.log( msg );#}
+      {#  if( typeof msg.user_name !== 'undefined' ) {#}
+      {#    $( 'h3' ).remove();#}
+      {#    $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' );#}
+      {#  }#}
+      {#});#}
+    </script>
 
-            $('#boton_enviar').click(function()
-            {
-                $.ajax({
-                    url: '{{ url_for("alta_peliculas_post") }}',
-                    data: $('form').serialize(),
-                    type: 'POST',
-                    success: function(response)
-                    {
-                        console.log(response);
 
-                        $('#boton_enviar').replaceWith("<button type=\"button\" class=\"btn btn-info\" id=\"boton_enviar\" onclick=\"boton_enviar(this)\" disabled >Procesando...</button>");
+{#    <script>#}
+{##}
+{##}
+{##}
+{#        $(function()#}
+{#        {#}
+{##}
+{#            $('#boton_enviar').click(function()#}
+{#            {#}
+{#                $.ajax({#}
+{#                    url: '{{ url_for("alta_peliculas_post") }}',#}
+{#                    data: $('form').serialize(),#}
+{#                    type: 'POST',#}
+{#                    success: function(response)#}
+{#                    {#}
+{#                        console.log(response);#}
+{##}
+{#                        $('#boton_enviar').replaceWith("<button type=\"button\" class=\"btn btn-info\" id=\"boton_enviar\" onclick=\"boton_enviar(this)\" disabled >Procesando...</button>");#}
                         {#let obj = JSON.parse(response);#}
                         {#console.log(obj);#}
-                        $('#contenedor').append(response);
-
-                    },
-                    error: function(error)
-                    {
-                        console.log(error);
-                    }, done: function (data) {
-
-                    }
-                });
-            });
-        });
-
-    </script>
+{#                        $('#contenedor').append(response);#}
+{##}
+{#                    },#}
+{#                    error: function(error)#}
+{#                    {#}
+{#                        console.log(error);#}
+{#                    }, done: function (data) {#}
+{##}
+{#                    }#}
+{#                });#}
+{#            });#}
+{#        });#}
+{##}
+{#    </script>#}
 
 {% endblock %}

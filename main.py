@@ -96,6 +96,9 @@ def alta_peliculas_post():
     for i in range(0, 3):
         proceso = subprocess.run(["python", "scrappyimagen_filmaffinity.py", "Joker"], shell=True, encoding="utf-8",
                                   universal_newlines=True)
+        imagen = str(proceso).splitlines()[0]
+        send()
+
         return "63345<br>"
     # proceso = subprocess.check_output(["python", "scrappyimagen_filmaffinity.py", "Joker"],  shell=True,
     #                                   encoding="utf-8", universal_newlines=True, preexec_fn=os.setsid)
@@ -176,4 +179,6 @@ def comprobarusuariopassword():
 
 
 if __name__ == '__main__':
-    app.run("127.0.0.1", 5000, debug=True)
+    socketio.run(app)
+    # socketio.run(app, host="127.0.0.1", port=5000, debug=True)
+    # app.run("127.0.0.1", 5000, debug=True)
